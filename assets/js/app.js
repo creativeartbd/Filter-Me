@@ -301,3 +301,27 @@ let filterImage = document.querySelector(".filterImage");
 if( filterImage) {
 	filterImage.src = localStorage.getItem("imgData");      
 }
+
+function saveImage() {
+	let filterImage = document.querySelector('.filterImage');	
+	let canvas = document.createElement('canvas');	
+	let ctx = canvas.getContext('2d');
+	let img = new Image();
+		img.addEventListener( 'load', () => {
+			ctx.filter = 'blur(2px)';
+			ctx.drawImage( img, 0, 0, 300, 200 );
+			window.URL.revokeObjectURL( this.src );
+		});
+		img.src = filterImage.src;
+
+	//Download button
+	let save = document.querySelector('#saveImg');
+	let download = document.createElement('a');
+	save.addEventListener('click', function() {		
+		download.href = canvas.toDataURL();
+		download.download = 'img.png';		
+		download.click();
+	});		
+}
+
+saveImage();

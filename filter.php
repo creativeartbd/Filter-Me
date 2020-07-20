@@ -122,7 +122,7 @@
                <div class="row">
                     <div class="col-md-12">                         
                          <input type="button" name="button" value="Back" class="btn btn-default float-right">
-                         <input type="button" name="button" value="Save" id="saveImg" class="btn btn-primary float-right"onclick="download_image()">
+                         <input type="button" name="button" value="Save" id="saveImg" class="btn btn-primary float-right">
                     </div>
                </div>
           </div>
