@@ -1,10 +1,4 @@
-<?php 
-require_once( 'header.php' ); 
-$database = new Database();
-$uploadFile = new UploadFile( $database );
-$allGalleries = $uploadFile->renderGallery();
-$noOfItems = $uploadFile->noOfFiles;
-?>
+<?php require_once('header.php'); ?>
 
 <div class="container">
      <div class="row">
@@ -18,11 +12,11 @@ $noOfItems = $uploadFile->noOfFiles;
           <div class="uploaded-image p-5">
                <div class="row">
                     <div class="col-md-12">
-                         <p class="no-of-items"><?php echo $noOfItems .  ( $noOfItems > 1 ? ' Items' : ' Item' );  ?></p>                         
+                         <p class="no-of-items"><?php echo $noOfItems .  ($noOfItems > 1 ? ' Items' : ' Item');  ?></p>
                     </div>
                </div>
                <div class="row" id="load-image">
-                    <?php  
+                    <?php
                     // Get the gallery                     
                     echo $allGalleries;
                     ?>
@@ -48,4 +42,4 @@ $noOfItems = $uploadFile->noOfFiles;
      </div>
 </div>
 
-<?php require_once( 'footer.php'); ?>
+<?php require_once('footer.php'); ?>

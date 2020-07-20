@@ -1,19 +1,19 @@
 const dropArea = document.querySelector('#drop-area');
 
-if( dropArea ) {	
-	
+if (dropArea) {
+
 	// Stop default browser behaviour
 	['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-		dropArea.addEventListener( eventName, preventDefaults, false );
+		dropArea.addEventListener(eventName, preventDefaults, false);
 	})
 
 	// Drop the file
 	dropArea.addEventListener('drop', (event) => {
-		let dt = event.dataTransfer;
+		let dt    = event.dataTransfer;
 		let files = dt.files;
 		// Handle files
 		handleFiles(files)
-	});	
+	});
 }
 
 // Prevent default browser reaction 
@@ -23,15 +23,15 @@ function preventDefaults(e) {
 }
 
 // Handle dropped files to upload
-function handleFiles(files) {	
+function handleFiles(files) {
 	uploadFile(files);
 }
 
 // Start upload  the files
 function uploadFile(files) {
 
-	let url = 'process-file.php'
-	let formData = new FormData();
+	let url        = 'process-file.php'
+	let formData   = new FormData();
 	let allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 
 	// Do some validation 
@@ -41,7 +41,7 @@ function uploadFile(files) {
 			alert('Invalid file formate, we are only accepting ' + allowedExt.join(", ") + ' file formates');
 			return false;
 		}
-		formData.append( 'files', value );
+		formData.append('files', value);
 		// After complete the validation preview the image
 		previewFile(value, value.name);
 	}
@@ -53,11 +53,11 @@ function uploadFile(files) {
 	})
 	.then((data) => {
 		// Just showing some return data to the console
-		console.log( data );
+		console.log(data);
 	})
 	.catch((error) => {
 		// If we found any error message 
-		alert( error );
+		alert(error);
 	})
 }
 
@@ -66,31 +66,31 @@ const loadImage = document.querySelector('#load-image');
 
 // Preview the uploaded files
 function previewFile(file, fileName) {
-	let noOfItems = document.querySelector('.no-of-items');	
 
-	let reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = function () {
+	let noOfItems = document.querySelector('.no-of-items');
+	let reader    = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function () {
 
 		let html = '';
-			html += '<div class="col-md-4"><div class="item" id="item"><a href="filter.php"><img src="' + reader.result + '" alt="" class="img-fluid filter-me"></a><span>' + fileName + '</span></div></div>';
-			loadImage.innerHTML += html;
-			reader.onloadend = doFilter();
+		html += '<div class="col-md-4"><div class="item" id="item"><a href="filter.php"><img src="' + reader.result + '" alt="" class="img-fluid filter-me"></a><span>' + fileName + '</span></div></div>';
+		loadImage.innerHTML += html;
+		reader.onloadend = doFilter();
 
 		let filterMe = document.querySelectorAll('.filter-me');
-			noOfItems.innerHTML = filterMe.length + ' Items';	
+		noOfItems.innerHTML = filterMe.length + ' Items';
 	}
 }
 
 // Fire doFilter function on page load
-window.addEventListener('load', doFilter );
+window.addEventListener('load', doFilter);
 
 // Save the filter image to local storage by click on the corresponding image
 function doFilter() {
-	let filterMe = document.querySelectorAll(".filter-me");	
+	let filterMe = document.querySelectorAll(".filter-me");
 	// If I can't find you :p 
-	if( !filterMe.length ) 
-		return ;
+	if (!filterMe.length)
+		return;
 
 	for (let i of filterMe) {
 		i.addEventListener("click", function () {
@@ -100,41 +100,41 @@ function doFilter() {
 }
 
 // All Default filter styles
-let presets = {	
-	original: {name: 'Original', filterSet: {} },
-	greyscale: {name: 'Greyscale', filterSet: { grayscale: 1} },
-	seipa: {name: 'Sepia', filterSet: { sepia: 1} },
-	invert: {name: 'Invert', filterSet: { invert: 1 } },
-	duotone: {name: 'Duotone', filterSet: { grayscale : 1, contrast : 1 } },
-	warm: {name: 'Warm', filterSet: {contrast: 1.5, brightness: 0.9}},
-	cool: {name: 'Cool', filterSet: {brightness:1.1, hueRotate: '-10', sepia: .3, saturate: 1.6}},
-	dramatic: {name: 'Dramatic', filterSet: {grayscale: 0.5, contrast: 0.95, brightness: 0.9}},	
+let presets = {
+	original : { name: 'Original', filterSet : {} },
+	greyscale: { name: 'Greyscale', filterSet: { grayscale : 1 } },
+	seipa    : { name: 'Sepia', filterSet    : { sepia     : 1 } },
+	invert   : { name: 'Invert', filterSet   : { invert    : 1 } },
+	duotone  : { name: 'Duotone', filterSet  : { grayscale : 1, contrast    : 1 } },
+	warm     : { name: 'Warm', filterSet     : { contrast  : 1.5, brightness: 0.9 } },
+	cool     : { name: 'Cool', filterSet     : { brightness: 1.1, hueRotate : '-10', sepia    : .3, saturate: 1.6 } },
+	dramatic : { name: 'Dramatic', filterSet : { grayscale : 0.5, contrast  : 0.95, brightness: 0.9 } },
 };
 
 // Apply the filters
 function makeFilter(filterSet) {
-	
-	var filterString = "";
+
+	var filterString  = "";
 	// Default filters 
-	var defaultValues = {		 
-		grayscale: 0,
-		sepia: 0,
-		saturate: 1,
-		hueRotate: 0,
-		invert: 0,
-		brightness: 1,
-		contrast: 1,
-		blur: 0,
-		opacity: 1		
+	var defaultValues = {
+		grayscale        : 0,
+		sepia            : 0,
+		saturate         : 1,
+		hueRotate        : 0,
+		invert           : 0,
+		brightness       : 1,
+		contrast         : 1,
+		blur             : 0,
+		opacity          : 1
 	};
 
 	// Loop through the filter object and save it to filterString
 	for (var filterFunc in filterSet) {
-		if(filterSet[filterFunc] !== defaultValues[filterFunc]) {
-			if(filterFunc == 'hueRotate') {
+		if (filterSet[filterFunc] !== defaultValues[filterFunc]) {
+			if (filterFunc == 'hueRotate') {
 				filterString = filterString + "hue-rotate(" + filterSet[filterFunc] + "deg) ";
 			}
-			else if(filterFunc == 'blur') {
+			else if (filterFunc == 'blur') {
 				filterString = filterString + filterFunc + "(" + filterSet[filterFunc] + "px) ";
 			}
 			else {
@@ -147,26 +147,26 @@ function makeFilter(filterSet) {
 }
 
 // Load all filter styles to this element
-let loadPresets = document.querySelector("#loadPresets");
+let loadPresets  = document.querySelector("#loadPresets");
 
 // Get the current local storage image
 let currentImage = localStorage.getItem("imgData");
 
 // if loadPresets found then load the filter
-if( loadPresets) {
-	for ( preset in presets ) {
+if (loadPresets) {
+	for (preset in presets) {
 		loadPresets.innerHTML += `<div class="col-md-3"><div class="preset-item"><img src="${currentImage}" class="img-fluid change-filter" style="${makeFilter(presets[preset].filterSet)}"><span>${presets[preset].name}</span></div></div>`;
-	}	
+	}
 }
 
 // Get the change filter element
 let changeFilter = document.querySelectorAll(".change-filter");
 // Apply the corresponding filter to the image
 for (let x of changeFilter) {
-	x.addEventListener("click", function() {
-		let style = this.getAttribute("style");				
+	x.addEventListener("click", function () {
+		let style        = this.getAttribute("style");
 		let ffilterImage = document.querySelector(".filterImage").style = style;
-		filterApplied = style.replace(/filter|:|;/gi, '');		
+		filterApplied    = style.replace(/filter|                       : |;/gi, '');
 		localStorage.setItem('filterApplied', filterApplied);
 	})
 }
@@ -207,15 +207,15 @@ $('#ratio a').on('click', function () {
 // For the crop tab end here
 
 // Select the image which we want to filter 
-var image = document.querySelector(".filterImage");
+var image          = document.querySelector(".filterImage");
 // Get all the "Adjust" range value
-var filterControls = document.querySelectorAll("input[type=range]");
+var filterControls = document.querySelectorAll("input[type = range]");
 // Get the flip element
-var flip = document.querySelector(".flip");
+var flip           = document.querySelector(".flip");
 
 // Apply the Ratio effect
 function applyRatio(ratio) {
-	let cropRatio = ratio.getAttribute('data-value');	
+	let cropRatio = ratio.getAttribute('data-value');
 	crop(imageURL, cropRatio).then(canvas => {
 		document.querySelector("#drawMe").appendChild(canvas);
 	});
@@ -249,8 +249,8 @@ function applyAdjust() {
 
 	});
 	image.style.filter = style;
-	
-	let filterApplied = style.replace(/filter|:|;/gi, '');		
+
+	let filterApplied = style.replace(/filter|:|;/gi, '');
 	localStorage.setItem('filterApplied', filterApplied);
 }
 
@@ -301,45 +301,36 @@ function crop(url, aspectRatio) {
 	})
 }
 
-let filterImage = document.querySelector(".filterImage");          
-if( filterImage) {
-	filterImage.src = localStorage.getItem("imgData");      
+let filterImage = document.querySelector(".filterImage");
+if (filterImage) {
+	filterImage.src = localStorage.getItem("imgData");
 }
 
+// Download the image after all the filter applied
 let save = document.querySelector('#saveImg');
-if( save ) {
-	save.addEventListener('click', function() {	
-		let filterImage = document.querySelector('.filterImage');	
-		if( !filterImage )
-			return;	
+if (save) {	
+	save.addEventListener('click', function () {
+		let filterImage = document.querySelector('.filterImage');
+		if (!filterImage)
+			return;
 
-		let currentFilter = localStorage.getItem('filterApplied');		
-		let canvas = document.createElement('canvas');	
-		let ctx = canvas.getContext('2d');
-		let img = new Image();
-			img.addEventListener( 'load', () => {
-				ctx.filter = currentFilter;
-
-				ctx.translate(canvas.width/2,canvas.height/2);
-
-    // rotate the canvas to the specified degrees
-    ctx.rotate(360*Math.PI/180);
-
-
-				ctx.drawImage( img, 0, 0, canvas.width, canvas.height );
-				window.URL.revokeObjectURL( this.src );
-			});
-			img.src = filterImage.src;
-
-		//Download button
-
-		img.addEventListener('load', function() {
-			let download = document.createElement("a");
-			  download.innerHTML = "&nbsp;";
-			  download.href = canvas.toDataURL();
-			  download.download = "filterd-image.png";
-			  download.click();
+		let currentFilter = localStorage.getItem('filterApplied');
+		let canvas        = document.createElement('canvas');
+		let ctx           = canvas.getContext('2d');
+		let img           = new Image();
+		img.addEventListener('load', () => {
+			ctx.filter = currentFilter;
+			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+			window.URL.revokeObjectURL(this.src);
 		});
-		
-	})	
+		img.src = filterImage.src;
+
+		img.addEventListener('load', function () {
+			let download       = document.createElement("a");
+			download.innerHTML = "&nbsp;";
+			download.href      = canvas.toDataURL();
+			download.download  = "filterd-image.png";
+			download.click();
+		});
+	})
 }
