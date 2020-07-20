@@ -215,41 +215,43 @@ var flip = document.querySelector(".flip");
 
 // Apply the Ratio effect
 function applyRatio(ratio) {
-	var ratio = ratio.getAttribute('data-value');
-	console.log(ratio);
-	crop(imageURL, ratio).then(canvas => {
+	let cropRatio = ratio.getAttribute('data-value');	
+	crop(imageURL, cropRatio).then(canvas => {
 		document.querySelector("#drawMe").appendChild(canvas);
 	});
 }
 
 // Apply the flip effect
 function applyFlip(flip) {
-	var computedFilters = "";
-	computedFilters = flip.getAttribute('data-value');
-	image.style.transform = computedFilters;
+	let style = "";
+	style = flip.getAttribute('data-value');
+	image.style.transform = style;
 }
 
 // Apply the rotate effect
 function applyRotae(flip) {
-	var computedFilters = "";
-	computedFilters = flip.getAttribute('data-value');
-	image.style.transform = computedFilters;
+	let style = "";
+	style = flip.getAttribute('data-value');
+	image.style.transform = style;
 }
 
 // Apply the adjust effect
 function applyAdjust() {
-	var computedFilters = "";
+	let style = "";
 	filterControls.forEach(function (item, index) {
 		if (item.getAttribute("data-filter") != '') {
 			if (item.getAttribute("data-filter") == 'drop-shadow') {
-				computedFilters += item.getAttribute("data-filter") + '(' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + 'gray' + ')';
+				style += item.getAttribute("data-filter") + '(' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + 'gray' + ')';
 			} else {
-				computedFilters += item.getAttribute("data-filter") + '(' + item.value + item.getAttribute("data-scale") + ") ";
+				style += item.getAttribute("data-filter") + '(' + item.value + item.getAttribute("data-scale") + ") ";
 			}
 		}
 
 	});
-	image.style.filter = computedFilters;
+	image.style.filter = style;
+	
+	let filterApplied = style.replace(/filter|:|;/gi, '');		
+	localStorage.setItem('filterApplied', filterApplied);
 }
 
 
@@ -305,32 +307,39 @@ if( filterImage) {
 }
 
 let save = document.querySelector('#saveImg');
-save.addEventListener('click', function() {
-	
-	let filterImage = document.querySelector('.filterImage');	
-	if( !filterImage )
-		return;	
+if( save ) {
+	save.addEventListener('click', function() {	
+		let filterImage = document.querySelector('.filterImage');	
+		if( !filterImage )
+			return;	
 
-	let currentFilter = localStorage.getItem('filterApplied');		
-	let canvas = document.createElement('canvas');	
-	let ctx = canvas.getContext('2d');
-	let img = new Image();
-		img.addEventListener( 'load', () => {
-			ctx.filter = currentFilter;
-			ctx.drawImage( img, 0, 0, 300, 200 );
-			window.URL.revokeObjectURL( this.src );
+		let currentFilter = localStorage.getItem('filterApplied');		
+		let canvas = document.createElement('canvas');	
+		let ctx = canvas.getContext('2d');
+		let img = new Image();
+			img.addEventListener( 'load', () => {
+				ctx.filter = currentFilter;
+
+				ctx.translate(canvas.width/2,canvas.height/2);
+
+    // rotate the canvas to the specified degrees
+    ctx.rotate(360*Math.PI/180);
+
+
+				ctx.drawImage( img, 0, 0, canvas.width, canvas.height );
+				window.URL.revokeObjectURL( this.src );
+			});
+			img.src = filterImage.src;
+
+		//Download button
+
+		img.addEventListener('load', function() {
+			let download = document.createElement("a");
+			  download.innerHTML = "&nbsp;";
+			  download.href = canvas.toDataURL();
+			  download.download = "filterd-image.png";
+			  download.click();
 		});
-		img.src = filterImage.src;
-
-	//Download button
-
-	img.addEventListener('load', function() {
-		let download = document.createElement("a");
-		  download.innerHTML = "&nbsp;";
-		  download.href = canvas.toDataURL();
-		  download.download = "filterd-image.png";
-		  download.click();
-		  localStorage.setItem('filterApplied', '');
-	});
-	
-})
+		
+	})	
+}
