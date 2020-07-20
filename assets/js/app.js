@@ -27,39 +27,44 @@ function handleFiles(files) {
 	uploadFile(files);
 }
 
-const imgUploaded = document.querySelector('.imgUploaded');
-const loadImage = document.querySelector('#load-image');
-
-
+// Start upload  the files
 function uploadFile(files) {
 
 	let url = 'process-file.php'
 	let formData = new FormData();
 	let allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 
+	// Do some validation 
 	for (const [key, value] of Object.entries(files)) {
 		let extension = value.name.split(".").pop();
 		if (allowedExt.includes(extension) == false) {
 			alert('Invalid file formate, we are only accepting ' + allowedExt.join(", ") + ' file formates');
 			return false;
 		}
-		formData.append('files', value);
+		formData.append( 'files', value );
+		// After complete the validation preview the image
 		previewFile(value, value.name);
 	}
 
+	// Now save file to the database
 	fetch(url, {
 		method: 'POST',
 		body: formData,
 	})
-		.then((data) => {
-			console.log( data );
-		})
-		.catch((error) => {
-			console.log(error);
-		})
-
+	.then((data) => {
+		// Just showing some return data to the console
+		console.log( data );
+	})
+	.catch((error) => {
+		// If we found any error message 
+		alert( error );
+	})
 }
 
+// Load the image here which we want to filter 
+const loadImage = document.querySelector('#load-image');
+
+// Preview the uploaded files
 function previewFile(file, fileName) {
 	let noOfItems = document.querySelector('.no-of-items');	
 
@@ -77,9 +82,10 @@ function previewFile(file, fileName) {
 	}
 }
 
-
+// Fire doFilter function on page load
 window.addEventListener('load', doFilter );
 
+// Save the filter image to local storage by click on the corresponding image
 function doFilter() {
 	let filterMe = document.querySelectorAll(".filter-me");	
 	// If I can't find you :p 
@@ -93,7 +99,7 @@ function doFilter() {
 	}
 }
 
-
+// All Default filter styles
 let presets = {	
 	original: {name: 'Original', filterSet: {} },
 	greyscale: {name: 'Greyscale', filterSet: { grayscale: 1} },
@@ -105,10 +111,11 @@ let presets = {
 	dramatic: {name: 'Dramatic', filterSet: {grayscale: 0.5, contrast: 0.95, brightness: 0.9}},	
 };
 
-
+// Apply the filters
 function makeFilter(filterSet) {
 	
 	var filterString = "";
+	// Default filters 
 	var defaultValues = {		 
 		grayscale: 0,
 		sepia: 0,
@@ -121,6 +128,7 @@ function makeFilter(filterSet) {
 		opacity: 1		
 	};
 
+	// Loop through the filter object and save it to filterString
 	for (var filterFunc in filterSet) {
 		if(filterSet[filterFunc] !== defaultValues[filterFunc]) {
 			if(filterFunc == 'hueRotate') {
@@ -134,19 +142,26 @@ function makeFilter(filterSet) {
 			}
 		}
 	}
+	// Now return the filter property with filter value
 	return "filter: " + filterString + ";";
 }
 
+// Load all filter styles to this element
 let loadPresets = document.querySelector("#loadPresets");
+
+// Get the current local storage image
 let currentImage = localStorage.getItem("imgData");
+
+// if loadPresets found then load the filter
 if( loadPresets) {
 	for ( preset in presets ) {
 		loadPresets.innerHTML += `<div class="col-md-3"><div class="preset-item"><img src="${currentImage}" class="img-fluid change-filter" style="${makeFilter(presets[preset].filterSet)}"><span>${presets[preset].name}</span></div></div>`;
 	}	
 }
 
-
+// Get the change filter element
 let changeFilter = document.querySelectorAll(".change-filter");
+// Apply the corresponding filter to the image
 for (let x of changeFilter) {
 	x.addEventListener("click", function() {
 		let style = this.getAttribute("style");				
@@ -154,62 +169,13 @@ for (let x of changeFilter) {
 	})
 }
 
-
-
-
-// for ( let count = 0; count < 8;l  ) {
-
-// 	loadPresets.innerHTML = `<img src="${currentImage}" style="${ makeFilter( value ) }">`;
-// }
-
-// for( const [ key, value ] in Object.entries(presets()) ) {
-// 	console.log( value );
-// 	//console.log( makeFilter(preset.filterSet ) );
-// 	//loadPresets.innerHTML = `<img src="${currentImage}" style="filter:${makeFilter(preset.filterSet)}">`;
-// }
-
+// Show browse button when click on "Browse for files"
 $("#clicker").click(function () {
 	$("#file").click();
 });
 
 
-// const status = document.getElementById('status');
-// const output = document.getElementById('output');
-// if (window.FileList && window.File && window.FileReader) {
-
-// 	document.getElementById('file-selector').addEventListener('change', event => {
-
-// 	output.src = '';
-// 	status.textContent = '';
-
-// 	const file = event.target.files[0];
-
-// 	if (!file.type) {
-// 		status.textContent = 'Error: The File.type property does not appear to be supported on this browser.';
-// 		return;
-// 	}
-
-// 	if (!file.type.match('image.*')) {
-// 		status.textContent = 'Error: The selected file does not appear to be an image.'
-// 		return;
-// 	}
-
-// 	const reader = new FileReader();
-// 	reader.addEventListener('load', event => {
-// 		output.src = event.target.result;
-// 	});
-// 	reader.readAsDataURL(file);
-// }); 
-
-
-
-
-
-$('.nav-tabs a').on('shown.bs.tab', function () {
-	alert('The new tab is now fully shown.');
-});
-
-
+// For Crop tab
 $('#flip a').on('click', function () {
 	var sel = $(this).data('title');
 	var tog = $(this).data('toggle');
@@ -236,12 +202,16 @@ $('#ratio a').on('click', function () {
 	$('a[data-toggle="' + tog + '"]').not('[data-title="' + sel + '"]').removeClass('active').addClass('notActive');
 	$('a[data-toggle="' + tog + '"][data-title="' + sel + '"]').removeClass('notActive').addClass('active');
 })
+// For the crop tab end here
 
-
+// Select the image which we want to filter 
 var image = document.querySelector(".filterImage");
+// Get all the "Adjust" range value
 var filterControls = document.querySelectorAll("input[type=range]");
+// Get the flip element
 var flip = document.querySelector(".flip");
 
+// Apply the Ratio effect
 function applyRatio(ratio) {
 	var ratio = ratio.getAttribute('data-value');
 	console.log(ratio);
@@ -250,13 +220,22 @@ function applyRatio(ratio) {
 	});
 }
 
-function applyCrop(flip) {
+// Apply the flip effect
+function applyFlip(flip) {
 	var computedFilters = "";
 	computedFilters = flip.getAttribute('data-value');
 	image.style.transform = computedFilters;
 }
 
-function applyFilter() {
+// Apply the rotate effect
+function applyRotae(flip) {
+	var computedFilters = "";
+	computedFilters = flip.getAttribute('data-value');
+	image.style.transform = computedFilters;
+}
+
+// Apply the adjust effect
+function applyAdjust() {
 	var computedFilters = "";
 	filterControls.forEach(function (item, index) {
 		if (item.getAttribute("data-filter") != '') {
@@ -272,28 +251,20 @@ function applyFilter() {
 }
 
 
-//let imageURL = document.querySelector("#filterMe").getAttribute("src");
-
-
 
 function crop(url, aspectRatio) {
 
 	// we return a Promise that gets resolved with our canvas element
 	return new Promise(resolve => {
-
 		// this image will hold our source image data
 		const inputImage = new Image();
-
 		// we want to wait for our image to load
 		inputImage.onload = () => {
-
 			// let's store the width and height of our image
 			const inputWidth = inputImage.naturalWidth;
 			const inputHeight = inputImage.naturalHeight;
-
 			// get the aspect ratio of the input image
 			const inputImageAspectRatio = inputWidth / inputHeight;
-
 			// if it's bigger than our target aspect ratio
 			let outputWidth = inputWidth;
 			let outputHeight = inputHeight;
@@ -324,28 +295,9 @@ function crop(url, aspectRatio) {
 		// start loading our image
 		inputImage.src = url;
 	})
-
-}
- let filterImage = document.querySelector(".filterImage");          
- if( filterImage) {
- 	filterImage.src = localStorage.getItem("imgData");      
- }
-	
-
-
-function download_image(){
-  // var canvas = document.getElementById("mcanvas");   
-  // canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-
-  // var link = document.createElement('a');
-  // link.download = "my-image.png";
-  // link.href = document.querySelector(".filterImage").src;
-  // link.click();
 }
 
-function callMe() {
-	
+let filterImage = document.querySelector(".filterImage");          
+if( filterImage) {
+	filterImage.src = localStorage.getItem("imgData");      
 }
-
-callMe();
-

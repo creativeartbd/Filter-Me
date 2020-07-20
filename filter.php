@@ -34,15 +34,15 @@
                                              <div class="col-md-6">
                                                   <div class="form-group">
                                                        <label for="exposure">Exposure</label>
-                                                       <input type="range" min="0" max="100" value="70" step="1" onchange="applyFilter();" data-filter="brightness" data-scale="%">
+                                                       <input type="range" min="0" max="100" value="70" step="1" onchange="applyAdjust();" data-filter="brightness" data-scale="%">
                                                   </div>
                                                   <div class="form-group">
                                                        <label for="">Contrast</label>
-                                                       <input type="range" min="0" max="200" value="100" step="1" onchange="applyFilter()" data-filter="contrast" data-scale="%">
+                                                       <input type="range" min="0" max="200" value="100" step="1" onchange="applyAdjust()" data-filter="contrast" data-scale="%">
                                                   </div>
                                                   <div class="form-group">
                                                        <label for="">Saturation</label>
-                                                       <input type="range" min="0" max="500" value="100" step="1" onchange="applyFilter()" data-filter="saturate" data-scale="%">
+                                                       <input type="range" min="0" max="500" value="100" step="1" onchange="applyAdjust()" data-filter="saturate" data-scale="%">
                                                   </div>
                                                   <div class="form-group">
                                                        <label for="">Warmth</label>
@@ -56,11 +56,11 @@
                                                   </div>
                                                   <div class="form-group">
                                                        <label for="exposure">Highlight</label>
-                                                       <input type="range" min="0" max="100" value="100" step="1" onchange="applyFilter()" data-filter="opacity" data-scale="%">
+                                                       <input type="range" min="0" max="100" value="100" step="1" onchange="applyAdjust()" data-filter="opacity" data-scale="%">
                                                   </div>
                                                   <div class="form-group">
                                                        <label for="exposure">Shadow</label>
-                                                       <input type="range" min="0" max="100" value="0" step="1" onchange="applyFilter();" data-filter="drop-shadow" data-scale="px">
+                                                       <input type="range" min="0" max="100" value="0" step="1" onchange="applyAdjust();" data-filter="drop-shadow" data-scale="px">
                                                   </div>
                                              </div>                                  
                                         </div>
@@ -71,9 +71,9 @@
                                                   <div class="input-group">
                                                        <label for="flip" class="col-sm-4 col-md-4 control-label text-right">Flip</label>
                                                        <div id="flip" class="btn-group">
-                                                            <a class="btn btn-primary active flip" onclick="applyCrop(this);" data-value="none" data-toggle="flip" data-title="none">None</a>
-                                                            <a class="btn btn-primary notActive flip" onclick="applyCrop(this);" data-value="scaleX(-1)" data-toggle="flip" data-title="flip-horizentally">Flip Horizentally</a>
-                                                            <a class="btn btn-primary notActive flip" onclick="applyCrop(this);" data-value="scaleY(-1)" data-toggle="flip" data-title="flip-vertically">Flip Vertically</a>
+                                                            <a class="btn btn-primary active flip" onclick="applyFlip(this);" data-value="none" data-toggle="flip" data-title="none">None</a>
+                                                            <a class="btn btn-primary notActive flip" onclick="applyFlip(this);" data-value="scaleX(-1)" data-toggle="flip" data-title="flip-horizentally">Flip Horizentally</a>
+                                                            <a class="btn btn-primary notActive flip" onclick="applyFlip(this);" data-value="scaleY(-1)" data-toggle="flip" data-title="flip-vertically">Flip Vertically</a>
                                                        </div>                                                  
                                                   </div>
                                              </div>
@@ -83,11 +83,11 @@
                                                   <div class="input-group">
                                                        <label for="rotate" class="col-sm-4 col-md-4 control-label text-right">Rotate</label>
                                                        <div id="rotate" class="btn-group">
-                                                            <a class="btn btn-primary active" onclick="applyCrop(this);" data-value="rotate(0deg)" data-toggle="rotate" data-title="0-deg">0 Deg</a>
-                                                            <a class="btn btn-primary notActive" onclick="applyCrop(this);" data-value="rotate(30deg)" data-toggle="rotate" data-title="30-deg">30 Deg</a>
-                                                            <a class="btn btn-primary notActive" onclick="applyCrop(this);" data-value="rotate(60deg)" data-toggle="rotate" data-title="60-deg">60 Deg</a>
-                                                            <a class="btn btn-primary notActive" onclick="applyCrop(this);" data-value="rotate(90deg)" data-toggle="rotate" data-title="90-deg">90 Deg</a>
-                                                            <a class="btn btn-primary notActive" onclick="applyCrop(this);" data-value="rotate(100deg)" data-toggle="rotate" data-title="100-deg">180 Deg</a>
+                                                            <a class="btn btn-primary active" onclick="applyRotae(this);" data-value="rotate(0deg)" data-toggle="rotate" data-title="0-deg">0 Deg</a>
+                                                            <a class="btn btn-primary notActive" onclick="applyRotae(this);" data-value="rotate(30deg)" data-toggle="rotate" data-title="30-deg">30 Deg</a>
+                                                            <a class="btn btn-primary notActive" onclick="applyRotae(this);" data-value="rotate(60deg)" data-toggle="rotate" data-title="60-deg">60 Deg</a>
+                                                            <a class="btn btn-primary notActive" onclick="applyRotae(this);" data-value="rotate(90deg)" data-toggle="rotate" data-title="90-deg">90 Deg</a>
+                                                            <a class="btn btn-primary notActive" onclick="applyRotae(this);" data-value="rotate(100deg)" data-toggle="rotate" data-title="100-deg">180 Deg</a>
                                                        </div>                                                  
                                                   </div>
                                              </div>
@@ -127,5 +127,5 @@
                </div>
           </div>
      </nav>
-     
+
 <?php require_once( 'footer.php'); ?>
