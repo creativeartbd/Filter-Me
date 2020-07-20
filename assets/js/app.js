@@ -1,3 +1,8 @@
+// Show browse button when click on "Browse for files"
+$("#clicker").click(function () {
+	$("#file").click();
+});
+
 const dropArea = document.querySelector('#drop-area');
 
 if (dropArea) {
@@ -8,12 +13,14 @@ if (dropArea) {
 	})
 
 	// Drop the file
-	dropArea.addEventListener('drop', (event) => {
-		let dt    = event.dataTransfer;
-		let files = dt.files;
-		// Handle files
-		handleFiles(files)
-	});
+	dropArea.addEventListener('drop', dataTransfer );
+}
+
+function dataTransfer ( event ) {
+	let dt    = event.dataTransfer;
+	let files = dt.files;
+	// Handle files
+	handleFiles(files)
 }
 
 // Prevent default browser reaction 
@@ -171,11 +178,6 @@ for (let x of changeFilter) {
 	})
 }
 
-
-// Show browse button when click on "Browse for files"
-$("#clicker").click(function () {
-	$("#file").click();
-});
 
 // For Crop tab
 $('#flip a').on('click', function () {

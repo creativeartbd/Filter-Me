@@ -107,7 +107,7 @@ class UploadFile
 		$id = $this->connection->Insert("Insert into `gallery` ( `gname`, `original_gname`, `created` ) values ( :gname, :original_gname, :created )", [
 			'gname'          => $gname,
 			'original_gname' => $original_gname,
-			'created'        => date('Y-m-d h: i: s')
+			'created'        => date('Y-m-d h:i:s')
 		]);
 	}
 
@@ -119,7 +119,7 @@ class UploadFile
 		foreach ($results as $result) {
 			$gname          = $result['gname'];
 			$original_gname = $result['original_gname'];
-			$html          .= "<div class = 'col-md-4'><div class = 'item' id = 'item'><a href = 'filter.php'><img src = 'assets/img/uploads/{$gname}' class = 'img-fluid filter-me'></a><span>$original_gname</span></div></div>";
+			$html          .= "<div class = 'col-md-4'><div class = 'item' id = 'item'><a href = 'filter.php'><img src = 'Gallery/{$gname}' class = 'img-fluid filter-me'></a><span>$original_gname</span></div></div>";
 		}
 		return $html;
 	}
