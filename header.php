@@ -1,4 +1,8 @@
-<?php require_once('init.php'); ?>
+<?php 
+require_once('init.php'); 
+$allGalleries = $uploadFile->renderGallery();
+$noOfItems    = $uploadFile->noOfFiles;
+?>
 
 <!doctype html>
 <html lang="en">
