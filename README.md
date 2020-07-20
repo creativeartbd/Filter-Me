@@ -4,6 +4,7 @@
 
 FilterMe is a JavaScript-based app where you can easily upload png, jpg, jpeg, and gif image in the gallery and then can apply a filter on any image. 
 
+Live Example:  [Click here](https://shibbir.dev/demo/filter-me/)
 
 
 ## Configuration
