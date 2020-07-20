@@ -3,6 +3,25 @@ body {
   background-color: #f6f7fb; 
 }
 
+.no-of-items {
+  font-weight: bold;
+}
+
+#flip .notActive{
+  color: #3276b1;
+  background-color: #fff;
+}
+
+#rotate .notActive{
+  color: #3276b1;
+  background-color: #fff;
+}
+
+#ratio .notActive{
+  color: #3276b1;
+  background-color: #fff;
+}
+
 #file {
    position:fixed;
    top:-1000px;
@@ -45,7 +64,7 @@ input[type="range"] {
   border-radius: 7%;  
   width: 100%;
   object-fit: cover;
-  max-height: 200px;
+  max-height: 175px;
 }
 
 .uploaded-image .item:hover {

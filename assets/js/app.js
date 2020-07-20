@@ -1,60 +1,39 @@
 const dropArea = document.querySelector('#drop-area');
+
+if( dropArea ) {	
+	
+	// Stop default browser behaviour
+	['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+		dropArea.addEventListener( eventName, preventDefaults, false );
+	})
+
+	// Drop the file
+	dropArea.addEventListener('drop', (event) => {
+		let dt = event.dataTransfer;
+		let files = dt.files;
+		// Handle files
+		handleFiles(files)
+	});	
+}
+
+// Prevent default browser reaction 
+function preventDefaults(e) {
+	e.preventDefault()
+	e.stopPropagation()
+}
+
+// Handle dropped files to upload
+function handleFiles(files) {	
+	uploadFile(files);
+}
+
 const imgUploaded = document.querySelector('.imgUploaded');
 const loadImage = document.querySelector('#load-image');
 
 
-
-
-if (loadImage) {
-	['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-		dropArea.addEventListener(eventName, preventDefaults, false)
-	})
-
-	function preventDefaults(e) {
-		e.preventDefault()
-		e.stopPropagation()
-	}
-
-
-
-
-	// dropArea.addEventListener('dragover', (event) => {
-	// 	event.stopPropagation();
-	// 	event.preventDefault();  
-	// 	event.dataTransfer.dropEffect = 'copy';
-	// });
-
-	dropArea.addEventListener('drop', (event) => {
-
-		// const fileList 	= event.dataTransfer.files;	
-		// console.log( fileList );
-		// const file 		= fileList[0];
-		//  const reader = new FileReader();
-		//  const fileName = file.name;  	
-
-		// reader.addEventListener('load', (event) => {
-		// 	imgUploaded.src = event.target.result;		
-		// });
-		// reader.readAsDataURL(file);	
-
-		let dt = event.dataTransfer;
-		let files = dt.files;
-		handleFiles(files)
-
-	});
-
-}
-
-function handleFiles(files) {
-	//files = [...files];	
-	uploadFile(files);
-	// files.forEach(uploadFile);
-	// files.forEach(previewFile);
-}
-
 function uploadFile(files) {
 
-	let url = 'process.php'
+	let url = 'process-file.php'
 	let formData = new FormData();
 	let allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -64,7 +43,7 @@ function uploadFile(files) {
 			alert('Invalid file formate, we are only accepting ' + allowedExt.join(", ") + ' file formates');
 			return false;
 		}
-		formData.append('files[]', value);
+		formData.append('files', value);
 		previewFile(value, value.name);
 	}
 
@@ -73,7 +52,7 @@ function uploadFile(files) {
 		body: formData,
 	})
 		.then((data) => {
-			console.log('Success');
+			console.log( data );
 		})
 		.catch((error) => {
 			console.log(error);
@@ -82,24 +61,35 @@ function uploadFile(files) {
 }
 
 function previewFile(file, fileName) {
+	let noOfItems = document.querySelector('.no-of-items');	
 
 	let reader = new FileReader();
-	reader.readAsDataURL(file);
-	reader.onload = function () {
+		reader.readAsDataURL(file);
+		reader.onload = function () {
 
 		let html = '';
-		html += '<div class="col-md-4"><div class="item" id="item"><a href="filter.php"><img src="' + reader.result + '" alt="" class="img-fluid filter-me"></a><span>' + fileName + '</span></div></div>';
-		loadImage.innerHTML += html;
+			html += '<div class="col-md-4"><div class="item" id="item"><a href="filter.php"><img src="' + reader.result + '" alt="" class="img-fluid filter-me"></a><span>' + fileName + '</span></div></div>';
+			loadImage.innerHTML += html;
+			reader.onloadend = doFilter();
 
-		reader.onloadend = function () {
-			let filterMe = document.querySelectorAll(".filter-me");
-			for (let i of filterMe) {
-				i.addEventListener("click", function () {
-					localStorage.setItem("imgData", this.src);
-				});
-			}
-		}
+		let filterMe = document.querySelectorAll('.filter-me');
+			noOfItems.innerHTML = filterMe.length + ' Items';	
+	}
+}
 
+
+window.addEventListener('load', doFilter );
+
+function doFilter() {
+	let filterMe = document.querySelectorAll(".filter-me");	
+	// If I can't find you :p 
+	if( !filterMe.length ) 
+		return ;
+
+	for (let i of filterMe) {
+		i.addEventListener("click", function () {
+			localStorage.setItem("imgData", this.src);
+		});
 	}
 }
 
@@ -149,10 +139,12 @@ function makeFilter(filterSet) {
 
 let loadPresets = document.querySelector("#loadPresets");
 let currentImage = localStorage.getItem("imgData");
-
-for ( preset in presets ) {
-	loadPresets.innerHTML += `<div class="col-md-3"><div class="preset-item"><img src="${currentImage}" class="img-fluid change-filter" style="${makeFilter(presets[preset].filterSet)}"><span>${presets[preset].name}</span></div></div>`;
+if( loadPresets) {
+	for ( preset in presets ) {
+		loadPresets.innerHTML += `<div class="col-md-3"><div class="preset-item"><img src="${currentImage}" class="img-fluid change-filter" style="${makeFilter(presets[preset].filterSet)}"><span>${presets[preset].name}</span></div></div>`;
+	}	
 }
+
 
 let changeFilter = document.querySelectorAll(".change-filter");
 for (let x of changeFilter) {
@@ -267,7 +259,7 @@ function applyCrop(flip) {
 function applyFilter() {
 	var computedFilters = "";
 	filterControls.forEach(function (item, index) {
-		if (item.getAttribute("data-filter") != '' && item.getAttribute("data-scale") != '') {
+		if (item.getAttribute("data-filter") != '') {
 			if (item.getAttribute("data-filter") == 'drop-shadow') {
 				computedFilters += item.getAttribute("data-filter") + '(' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + item.value + item.getAttribute("data-scale") + ' ' + 'gray' + ')';
 			} else {
@@ -334,3 +326,26 @@ function crop(url, aspectRatio) {
 	})
 
 }
+ let filterImage = document.querySelector(".filterImage");          
+ if( filterImage) {
+ 	filterImage.src = localStorage.getItem("imgData");      
+ }
+	
+
+
+function download_image(){
+  // var canvas = document.getElementById("mcanvas");   
+  // canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+
+  // var link = document.createElement('a');
+  // link.download = "my-image.png";
+  // link.href = document.querySelector(".filterImage").src;
+  // link.click();
+}
+
+function callMe() {
+	
+}
+
+callMe();
+

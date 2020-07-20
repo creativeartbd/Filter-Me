@@ -1,22 +1,4 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-     <meta charset="utf-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-     <title>Filter Me App</title>
-</head>
-
-<body>
-     <!-- Navigation area -->
-     <nav class="navbar navbar-expand-lg navbar-light">
-          <div class="container">
-               <a class="navbar-brand" href="#">Filter Me :)</a>
-          </div>
-     </nav>
-     <!-- Navigation area end here-->
+<?php require_once( 'header.php' ); ?>
 
      <div class="container">
           <div class="row">
@@ -29,7 +11,7 @@
                <div class="row">
                     <div class="col-md-12">
                          <div class="filter-container">
-                              <img src="" class="filterImage">
+                              <img src="" class="filterImage">                                       
                          </div>
                          <div class="filter-control">
                               <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -136,26 +118,14 @@
 
      <!-- Navigation area -->
      <nav class="navbar navbar-expand-lg navbar-light fixed-bottom">
-          <div class="container">
+          <div class="container">               
                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12">                         
                          <input type="button" name="button" value="Back" class="btn btn-default float-right">
-                         <input type="button" name="button" value="Save" class="btn btn-primary float-right">
+                         <input type="button" name="button" value="Save" id="saveImg" class="btn btn-primary float-right"onclick="download_image()">
                     </div>
                </div>
           </div>
      </nav>
-     <!-- Navigation area end here-->
-
-     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-     <script src="assets/js/app.js"></script>
-     <script type="text/javascript">
-          let filterImage = document.querySelector(".filterImage");          
-          filterImage.src = localStorage.getItem("imgData");          
-     </script>
-</body>
-
-</html>
+     
+<?php require_once( 'footer.php'); ?>
