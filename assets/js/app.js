@@ -166,14 +166,16 @@ for (let x of changeFilter) {
 	x.addEventListener("click", function() {
 		let style = this.getAttribute("style");				
 		let ffilterImage = document.querySelector(".filterImage").style = style;
+		filterApplied = style.replace(/filter|:|;/gi, '');		
+		localStorage.setItem('filterApplied', filterApplied);
 	})
 }
+
 
 // Show browse button when click on "Browse for files"
 $("#clicker").click(function () {
 	$("#file").click();
 });
-
 
 // For Crop tab
 $('#flip a').on('click', function () {
@@ -302,26 +304,33 @@ if( filterImage) {
 	filterImage.src = localStorage.getItem("imgData");      
 }
 
-function saveImage() {
+let save = document.querySelector('#saveImg');
+save.addEventListener('click', function() {
+	
 	let filterImage = document.querySelector('.filterImage');	
+	if( !filterImage )
+		return;	
+
+	let currentFilter = localStorage.getItem('filterApplied');		
 	let canvas = document.createElement('canvas');	
 	let ctx = canvas.getContext('2d');
 	let img = new Image();
 		img.addEventListener( 'load', () => {
-			ctx.filter = 'blur(2px)';
+			ctx.filter = currentFilter;
 			ctx.drawImage( img, 0, 0, 300, 200 );
 			window.URL.revokeObjectURL( this.src );
 		});
 		img.src = filterImage.src;
 
 	//Download button
-	let save = document.querySelector('#saveImg');
-	let download = document.createElement('a');
-	save.addEventListener('click', function() {		
-		download.href = canvas.toDataURL();
-		download.download = 'img.png';		
-		download.click();
-	});		
-}
 
-saveImage();
+	img.addEventListener('load', function() {
+		let download = document.createElement("a");
+		  download.innerHTML = "&nbsp;";
+		  download.href = canvas.toDataURL();
+		  download.download = "filterd-image.png";
+		  download.click();
+		  localStorage.setItem('filterApplied', '');
+	});
+	
+})
