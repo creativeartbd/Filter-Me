@@ -35,7 +35,7 @@ $uploadFile   = new UploadFile($database);
 
 Here I have used host as `localhost`, database name as `filterme`, localhost user as `root` and password is **empty** by default. 
 
-After that, just **import** the the filterme.sql file to your newly created database.
+After that, just **import** the filterme.sql file to your newly created database.
 
 
 
