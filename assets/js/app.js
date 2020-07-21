@@ -3,15 +3,20 @@ $("#clicker").click(function () {
 	$("#file").click();
 });
 
+// Get file using the browse link
+const browse = document.querySelector('#file'); 
+if( browse ) {
+	browse.addEventListener('change', function () {		
+		handleFiles( this.files );
+	})
+}
+
 const dropArea = document.querySelector('#drop-area');
-
 if (dropArea) {
-
 	// Stop default browser behaviour
 	['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
 		dropArea.addEventListener(eventName, preventDefaults, false);
 	})
-
 	// Drop the file
 	dropArea.addEventListener('drop', dataTransfer );
 }
@@ -19,6 +24,7 @@ if (dropArea) {
 function dataTransfer ( event ) {
 	let dt    = event.dataTransfer;
 	let files = dt.files;
+	console.log(event);
 	// Handle files
 	handleFiles(files)
 }
@@ -48,7 +54,8 @@ function uploadFile(files) {
 			alert('Invalid file formate, we are only accepting ' + allowedExt.join(", ") + ' file formates');
 			return false;
 		}
-		formData.append('files', value);
+		// Allow  multiple file uplooad
+		formData.append('files[]', value);
 		// After complete the validation preview the image
 		previewFile(value, value.name);
 	}

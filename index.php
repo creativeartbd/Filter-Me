@@ -32,8 +32,8 @@
                     </div>
                     <div class="col-md-8">
                          <div class="img-upload-area" id="drop-area">
-                              <p>Drag and Drop files here <!-- or <a href="#" id="clicker">Browse for files</a>--></p>
-                              <input type="file" id="file" />
+                              <p>Drag and Drop files here or <a href="#" id="clicker">Browse for files</a></p>
+                              <input type="file" id="file" multiple />
                          </div>
                     </div>
                </div>

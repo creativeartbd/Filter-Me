@@ -11,7 +11,7 @@ class UploadFile
 	// Upload directory
 	protected $uploadTarget = 'Gallery/';
 	// Uploaded file name
-	protected $fileName;
+	protected $fileName = [];
 	// Uploaded temporary file name
 	protected $tmpName;
 	// New filename
@@ -26,68 +26,90 @@ class UploadFile
 		$this->connection = $connection;
 	}
 
+	// Make an associative array file with numeric index
+	public function reArrayFiles( &$files ) {
+
+		$fileArray = [];
+		$fileCount = count( $files['name'] );
+		$fileKeys  = array_keys( $files );
+	 
+		for ( $i = 0; $i < $fileCount; $i++ ) {
+		    foreach ( $fileKeys as $key ) {
+			   $fileArray[$i][$key] = $files[$key][$i];
+		    }
+		}
+	 
+		return $fileArray;
+	 }
+
 	// Start validation and then upload
-	public function startUpload()
+	public function startUpload( $files )
 	{
+		// Re formate the array		
+		$newFileArray= $this->reArrayFiles( $files );
 
-		$this->fileName = $_FILES['files']['name'];
-		$this->tmpName = $_FILES['files']['tmp_name'];
+		// Loop through all the files and do the validation
+		foreach( $newFileArray as $file ) {
+			
+			$fileName    = $file['name'];
+			$fileType    = $file['type'];
+			$fileTmpName = $file['tmp_name'];
+			$fileError   = $file['error'];
+			$fileSize    = $file['size'];
 
-		// Check file extension
-		if (!$this->checkExt()) {
-			die("Sorry, you can not upload this filetype!");
-		}
-
-		// Check file size
-		if (!$this->checkSize()) {
-			die("Sorry, the file you have attempted to upload is too large!");
-		}
-
-		// Check file is exists already
-		if ($this->fileExists()) {
-			die("Sorry, this file already exists on our servers!");
-		}
-
-		// Finally if the file is uploaded 
-		if ($this->uploadIt()) {
-			if ($this->insertToGallery($this->newFileName, $this->fileName)) {
-				echo "Your file has been uploaded!";
+			// check the file size
+			if( !$this->checkSize ( $fileTmpName ) ) {
+				die('Your uploaded file is too large');
 			}
-		} else {
-			echo "Sorry, your file could not be uploaded for some unknown reason!";
-		}
+
+			// Check file extension
+			if ( !$this->checkExt( $fileName ) ) {
+				die('Sorry, you can not upload this filetype!');
+			}
+
+			// Finally if the file is uploaded 
+			if ( $this->uploadIt( $fileTmpName, $fileName ) ) {
+				if ( $this->insertToGallery( $this->newFileName, $fileName)) {
+					echo 'Your file has been uploaded!';
+				}
+			} else {
+				die('Sorry, your file could not be uploaded for some unknown reason!');
+			}
+			
+		}	
+		
 	}
 
-	public function newFileName()
+	// Check file extension from the uploaded file
+	public function checkExt( $fileName )
 	{
-		$rand = rand(10000, 99999) . $this->getExt();
+		return ( in_array( $this->getExt( $fileName ), $this->extensions ) ? true : false);		
+	}
+
+	// Get the file extesion from the uploaded file
+	public function getExt( $fileName )
+	{
+		return strtolower( substr( $fileName, strpos( $fileName, "." ), strlen( $fileName) - 1) );
+	}
+
+	// Check if the file size is greater than desire size
+	public function checkSize( $fileTmpName )
+	{
+		return ( ( filesize( $fileTmpName ) > $this->maxSize ) ? false : true );
+	}
+
+	public function newFileName( $fileName )
+	{
+		$rand = rand(10000, 99999) . $this->getExt( $fileName );
 		$this->newFileName = $rand;
 		return $rand;
 	}
 
 	// Move the uploaded file to directory
-	public function uploadIt()
+	public function uploadIt( $fileTmpName, $fileName )
 	{
-		return (move_uploaded_file($this->tmpName, $this->uploadTarget . $this->newFileName()) ? true : false);
-	}
-
-	// Check if the file size is greater than desire size
-	public function checkSize()
-	{
-		return ((filesize($this->tmpName) > $this->maxSize) ? false : true);
-	}
-
-	// Get the file extesion from the uploaded file
-	public function getExt()
-	{
-		return strtolower(substr($this->fileName, strpos($this->fileName, "."), strlen($this->fileName) - 1));
-	}
-
-	// Check file extension from the uploaded file
-	public function checkExt()
-	{
-		return (in_array($this->getExt(), $this->extensions) ? true : false);
-	}
+		return (move_uploaded_file( $fileTmpName, $this->uploadTarget . $this->newFileName($fileName)) ? true : false);
+	}	
 
 	// Check if the directory is writtable
 	public function isWritable()
@@ -96,10 +118,10 @@ class UploadFile
 	}
 
 	// Check if the file is already tehre 
-	public function fileExists()
-	{
-		return (file_exists($this->uploadTarget . $this->newFileName()));
-	}
+	// public function fileExists()
+	// {
+	// 	return (file_exists($this->uploadTarget . $this->newFileName()));
+	// }
 
 	// Insert to gallery table
 	public function insertToGallery($gname, $original_gname)
