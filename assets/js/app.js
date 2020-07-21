@@ -180,7 +180,7 @@ for (let x of changeFilter) {
 	x.addEventListener("click", function () {
 		let style        = this.getAttribute("style");
 		let ffilterImage = document.querySelector(".filterImage").style = style;
-		filterApplied    = style.replace(/filter|                       : |;/gi, '');
+		filterApplied    = style.replace(/filter|:|;/gi, '');
 		localStorage.setItem('filterApplied', filterApplied);
 	})
 }
@@ -326,7 +326,7 @@ if (save) {
 		let currentFilter = localStorage.getItem('filterApplied');
 		let canvas        = document.createElement('canvas');
 		let ctx           = canvas.getContext('2d');
-		let img           = new Image();
+		let img           = new Image();		
 		img.addEventListener('load', () => {
 			ctx.filter = currentFilter;
 			ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
