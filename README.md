@@ -49,7 +49,7 @@ After the configuration is done you can now open your app by the following URL: 
 
 
 
-After open the main URL you can see Drag and Drop area where you can drag your **image**. After successfully dragged the image the app will automatically upload the image to the Gallery folder and as well as the database to store the data. 
+After open the main URL you can see **Drag and Drop** area as well as the **browse** link where you can drag or browse your **images**. After successfully dragged or selected the images the app will automatically upload the image/s to the Gallery folder and as well as the database to store the data. 
 
 
 
